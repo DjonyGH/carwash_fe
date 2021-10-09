@@ -17,7 +17,13 @@ export interface ISetIsAuthAction {
 
 export interface ISetUserAction {
   type: EAuthAction.SET_USER
-  payload: boolean
+  payload: IUser
 }
 
-export type TAuthAction = ISetIsAuthAction
+export type TAuthAction = ISetIsAuthAction | ISetUserAction
+
+export interface IAuthResponce {
+  accessToken: string
+  refreshToken: string
+  user: IUser
+}

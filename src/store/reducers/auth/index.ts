@@ -10,6 +10,8 @@ export default function authReducer(state = initialState, action: TAuthAction): 
   switch (action.type) {
     case EAuthAction.SET_IS_AUTH:
       return { ...state, isAuth: action.payload }
+    case EAuthAction.SET_USER:
+      return { ...state, user: action.payload }
     default:
       return state
   }
