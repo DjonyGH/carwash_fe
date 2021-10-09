@@ -2,9 +2,11 @@ import { Button, Modal, Row, Form, Input } from 'antd'
 import MaskedInput from 'antd-mask-input'
 
 import React, { FC, useState } from 'react'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
 import styles from './mainPage.module.scss'
 
 const MainPage: FC = () => {
+  const { isAuth } = useTypedSelector((state) => state.authReducer)
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
   const prefixSelector = <Form.Item noStyle>+7</Form.Item>
@@ -18,12 +20,16 @@ const MainPage: FC = () => {
         <Button type='primary' className={styles.ml_10}>
           О нас
         </Button>
-        <Button type='primary' className={styles.ml_10} onClick={() => setIsModalVisible(true)}>
-          Войти
-        </Button>
-        <Button type='primary' className={styles.ml_10}>
-          Выйти
-        </Button>
+        {!isAuth && (
+          <Button type='primary' className={styles.ml_10} onClick={() => setIsModalVisible(true)}>
+            Войти
+          </Button>
+        )}
+        {isAuth && (
+          <Button type='primary' className={styles.ml_10}>
+            Выйти
+          </Button>
+        )}
       </Row>
       <Modal
         title='Авторизация'
@@ -32,7 +38,12 @@ const MainPage: FC = () => {
         closable={false}
         onCancel={() => setIsModalVisible(false)}
       >
-        <Form name='auth' layout='vertical' onFinish={(e) => console.log('>>', e)}>
+        <Form
+          name='auth'
+          layout='vertical'
+          onFinish={(e) => console.log('>>', e)}
+          // onFieldsChange={(e) => console.log('>>>>', e)}
+        >
           <Form.Item
             label='Номер телефона'
             name='login'
