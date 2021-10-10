@@ -4,6 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import { ERoutes, publicRoutes } from './router'
 import { authActionCreator } from './store/reducers/auth/action-creators'
 import './App.scss'
+import Header from './components/Header'
 
 function App() {
   const dispatch = useDispatch()
@@ -14,6 +15,7 @@ function App() {
 
   return (
     <div className='App'>
+      <Header />
       <Switch>
         {publicRoutes.map((route) => (
           <Route path={route.path} component={route.component} exact={route.exact} key={route.path} />
