@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Switch, Route, Redirect } from 'react-router-dom'
-import './App.scss'
 import { ERoutes, publicRoutes } from './router'
 import { authActionCreator } from './store/reducers/auth/action-creators'
+import './App.scss'
 
 function App() {
   const dispatch = useDispatch()

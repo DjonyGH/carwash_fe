@@ -2,6 +2,8 @@ export interface IUser {
   id: number
   login: string
   name?: string
+  birthday?: string
+  gender?: 'man' | 'wowan'
   email?: string
   isBlocked?: string
   garage?: IUserCar[]
