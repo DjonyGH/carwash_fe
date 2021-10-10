@@ -32,7 +32,6 @@ const AuthModal: FC<IAuthModalProps> = ({ isModalVisible, setIsModalVisible }) =
       closable={false}
       onCancel={() => setIsModalVisible(false)}
     >
-      {phone}
       <Form
         ref={authForm}
         name='auth'
