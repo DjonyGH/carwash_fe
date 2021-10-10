@@ -27,3 +27,8 @@ export interface IAuthResponce {
   refreshToken: string
   user: IUser
 }
+
+export interface IAuthBody {
+  login: string
+  password: string
+}

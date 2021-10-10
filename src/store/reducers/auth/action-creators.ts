@@ -2,8 +2,8 @@ import { TAppDispatch } from '../..'
 import { EAuthAction, IAuthResponce, ISetIsAuthAction, ISetUserAction } from './types'
 import { generalActionCreator } from '../general/action-creators'
 import { IUser } from '../../../types'
-import http from '../../../utils/http'
-import { AxiosResponse } from 'axios'
+import http, { BASE_URL } from '../../../utils/http'
+import axios, { AxiosResponse } from 'axios'
 
 export const authActionCreator = {
   setIsAuth: (isAuth: boolean): ISetIsAuthAction => ({
@@ -19,9 +19,8 @@ export const authActionCreator = {
       dispatch(generalActionCreator.setIsLoading(true))
       console.log('LOGIN', login, pass)
       const responce = await http.post<any, AxiosResponse<IAuthResponce>>('/login', { login, pass })
-      const { accessToken, refreshToken, user } = responce.data
+      const { accessToken, user } = responce.data
       localStorage.setItem('access-token', accessToken)
-      localStorage.setItem('refresh-token', refreshToken)
       dispatch(authActionCreator.setIsAuth(true))
       dispatch(authActionCreator.setUser(user))
     } catch (error) {
@@ -40,6 +39,22 @@ export const authActionCreator = {
       localStorage.removeItem('refresh-token')
       dispatch(authActionCreator.setIsAuth(false))
       dispatch(authActionCreator.setUser({} as IUser))
+    } catch (error) {
+      dispatch(generalActionCreator.setError(String(error)))
+    } finally {
+      dispatch(generalActionCreator.setIsLoading(false))
+    }
+  },
+  checkAuth: () => async (dispatch: TAppDispatch) => {
+    try {
+      dispatch(generalActionCreator.setIsLoading(true))
+      console.log('REFRESH')
+      const responce = await axios.get<IAuthResponce>(`${BASE_URL}/refresh`, { withCredentials: true })
+
+      const { accessToken, user } = responce.data
+      localStorage.setItem('access-token', accessToken)
+      dispatch(authActionCreator.setIsAuth(true))
+      dispatch(authActionCreator.setUser(user))
     } catch (error) {
       dispatch(generalActionCreator.setError(String(error)))
     } finally {
