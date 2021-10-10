@@ -45,7 +45,7 @@ const AuthModal: FC<IAuthModalProps> = ({ isModalVisible, setIsModalVisible }) =
           validateTrigger='onBlur'
           rules={[
             { required: true, message: 'Введите номер телефона' },
-            { len: 10, message: 'Длина должна быть 10 символов' },
+            { len: 13, message: 'Длина должна быть 10 символов' },
           ]}
         >
           <MaskedInput addonBefore={prefixSelector} mask='111 111 11 11' placeholder='___ ___ __ __' name='card' />
