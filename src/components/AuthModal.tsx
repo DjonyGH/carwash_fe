@@ -39,11 +39,27 @@ const AuthModal: FC<IAuthModalProps> = ({ isModalVisible, setIsModalVisible }) =
         onFinish={(e: IAuthBody) => dispatch(authActionCreator.login(prepareLogin(e.login), e.password))}
         onValuesChange={handleValuesChange}
       >
-        <Form.Item label='Номер телефона' name='login' rules={[{ required: true, message: 'Введите номер телефона' }]}>
+        <Form.Item
+          label='Номер телефона'
+          name='login'
+          validateTrigger='onBlur'
+          rules={[
+            { required: true, message: 'Введите номер телефона' },
+            { len: 10, message: 'Длина должна быть 10 символов' },
+          ]}
+        >
           <MaskedInput addonBefore={prefixSelector} mask='111 111 11 11' placeholder='___ ___ __ __' name='card' />
         </Form.Item>
 
-        <Form.Item label='Пароль' name='password' rules={[{ required: true, message: 'Введите пароль' }]}>
+        <Form.Item
+          label='Пароль'
+          name='password'
+          validateTrigger='onBlur'
+          rules={[
+            { required: true, message: 'Введите пароль' },
+            { min: 6, message: 'Длина пароля должна быть не менее 6 символов' },
+          ]}
+        >
           <Input.Password placeholder='Введите пароль' />
         </Form.Item>
 
