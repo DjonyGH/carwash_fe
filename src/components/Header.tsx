@@ -32,7 +32,7 @@ const Header: FC = () => {
 
   return (
     <>
-      <Row justify={'end'} className='header'>
+      <Row justify={'end'} align={'middle'} className='header'>
         {checkPage(ERoutes.HEAD) && (
           <Button type='primary' onClick={() => changePage(ERoutes.HEAD)}>
             Главная
