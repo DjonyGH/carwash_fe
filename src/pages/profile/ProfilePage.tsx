@@ -1,12 +1,14 @@
 import React, {
   FC,
   useRef,
+  useState,
   // useState
 } from 'react'
 // import { useDispatch } from 'react-redux'
 
 import { Row, Form, Input, Button, DatePicker, Radio, Space } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { EMode } from './types'
 
 // import { useTypedSelector } from '../../hooks/useTypedSelector'
 // import { authActionCreator } from '../../store/reducers/auth/action-creators'
@@ -15,7 +17,11 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 const ProfilePage: FC = () => {
   // const { isAuth } = useTypedSelector((state) => state.authReducer)
   // const dispatch = useDispatch()
+  const [mode, setMode] = useState<EMode>(EMode.view)
   const profileForm = useRef(null)
+
+  const name = 'Vasya'
+  // const name = undefined
 
   return (
     <>
@@ -26,11 +32,6 @@ const ProfilePage: FC = () => {
           ref={profileForm}
           name='auth'
           layout='vertical'
-          // labelCol={{ span: 8 }}
-          wrapperCol={{
-            span: 24,
-            offset: 0,
-          }}
           onFinish={(e) => console.log('submit', e)}
         >
           <Form.Item
@@ -39,22 +40,22 @@ const ProfilePage: FC = () => {
             validateTrigger='onBlur'
             rules={[{ len: 2, message: 'Длина должна быть не менее 2 символов' }]}
           >
-            <Input placeholder='Введите имя' />
+            <Input placeholder='Введите имя' defaultValue={name} disabled={mode === EMode.view} />
           </Form.Item>
 
           <Form.Item label='Дата рождения' name='birthday'>
-            <DatePicker placeholder='Выберите дату' />
+            <DatePicker placeholder='Выберите дату' disabled={mode === EMode.view} />
           </Form.Item>
 
           <Form.Item label='Пол' name='gender'>
-            <Radio.Group>
+            <Radio.Group disabled={mode === EMode.view}>
               <Radio.Button value='small'>Мужчина</Radio.Button>
               <Radio.Button value='default'>Женщина</Radio.Button>
             </Radio.Group>
           </Form.Item>
 
           <Form.Item name='email' label='Email' validateTrigger='onBlur' rules={[{ type: 'email' }]}>
-            <Input placeholder='Введите Email' />
+            <Input placeholder='Введите Email' disabled={mode === EMode.view} />
           </Form.Item>
 
           <Form.List name='cars'>
@@ -68,7 +69,7 @@ const ProfilePage: FC = () => {
                       fieldKey={[fieldKey, 'brand']}
                       rules={[{ required: true, message: 'Выберите марку автомобиля' }]}
                     >
-                      <Input placeholder='Марка' />
+                      <Input placeholder='Марка' disabled={mode === EMode.view} />
                     </Form.Item>
                     <Form.Item
                       {...restField}
@@ -76,7 +77,7 @@ const ProfilePage: FC = () => {
                       fieldKey={[fieldKey, 'model']}
                       rules={[{ required: true, message: 'Выберите молель автомобиля' }]}
                     >
-                      <Input placeholder='Модель' />
+                      <Input placeholder='Модель' disabled={mode === EMode.view} />
                     </Form.Item>
                     <Form.Item
                       {...restField}
@@ -84,25 +85,39 @@ const ProfilePage: FC = () => {
                       fieldKey={[fieldKey, 'carNumber']}
                       rules={[{ required: true, message: 'Введите гос.номер автомобиля' }]}
                     >
-                      <Input placeholder='Гос.номер' />
+                      <Input placeholder='Гос.номер' disabled={mode === EMode.view} />
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Space>
                 ))}
-                <Form.Item>
-                  <Button type='dashed' onClick={() => add()} block icon={<PlusOutlined />}>
-                    Добавить автомобиль
-                  </Button>
-                </Form.Item>
+                {mode === EMode.edit && (
+                  <Form.Item>
+                    <Button type='dashed' onClick={() => add()} block icon={<PlusOutlined />}>
+                      Добавить автомобиль
+                    </Button>
+                  </Form.Item>
+                )}
               </>
             )}
           </Form.List>
 
           <Form.Item>
             <Row justify={'space-between'}>
-              <Button type='primary' htmlType='submit'>
-                Сохранить
-              </Button>
+              {mode === EMode.edit && (
+                <>
+                  <Button type='primary' htmlType='submit'>
+                    Сохранить
+                  </Button>
+                  <Button htmlType='submit' onClick={() => setMode(EMode.view)}>
+                    Отмена
+                  </Button>
+                </>
+              )}
+              {mode === EMode.view && (
+                <Button type='primary' htmlType='submit' onClick={() => setMode(EMode.edit)}>
+                  Редактировать
+                </Button>
+              )}
             </Row>
           </Form.Item>
         </Form>
