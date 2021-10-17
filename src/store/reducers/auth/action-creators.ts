@@ -1,18 +1,15 @@
 import { TAppDispatch } from '../..'
-import { EAuthAction, IAuthResponce, ISetIsAuthAction, ISetUserAction } from './types'
+import { EAuthAction, IAuthResponce, ISetIsAuthAction } from './types'
 import { generalActionCreator } from '../general/action-creators'
 import { IUser } from '../../../types'
 import http, { BASE_URL } from '../../../utils/http'
 import axios, { AxiosResponse } from 'axios'
+import { userActionCreator } from '../user/action-creators'
 
 export const authActionCreator = {
   setIsAuth: (isAuth: boolean): ISetIsAuthAction => ({
     type: EAuthAction.SET_IS_AUTH,
     payload: isAuth,
-  }),
-  setUser: (user: IUser): ISetUserAction => ({
-    type: EAuthAction.SET_USER,
-    payload: user,
   }),
   login: (login: string, pass: string) => async (dispatch: TAppDispatch) => {
     try {
@@ -22,7 +19,7 @@ export const authActionCreator = {
       const { accessToken, user } = responce.data
       localStorage.setItem('access-token', accessToken)
       dispatch(authActionCreator.setIsAuth(true))
-      dispatch(authActionCreator.setUser(user))
+      dispatch(userActionCreator.setUser(user))
     } catch (error) {
       dispatch(generalActionCreator.setError(String(error)))
     } finally {
@@ -38,7 +35,7 @@ export const authActionCreator = {
       localStorage.removeItem('access-token')
       localStorage.removeItem('refresh-token')
       dispatch(authActionCreator.setIsAuth(false))
-      dispatch(authActionCreator.setUser({} as IUser))
+      dispatch(userActionCreator.setUser({} as IUser))
     } catch (error) {
       dispatch(generalActionCreator.setError(String(error)))
     } finally {
@@ -54,7 +51,7 @@ export const authActionCreator = {
       const { accessToken, user } = responce.data
       localStorage.setItem('access-token', accessToken)
       dispatch(authActionCreator.setIsAuth(true))
-      dispatch(authActionCreator.setUser(user))
+      dispatch(userActionCreator.setUser(user))
     } catch (error) {
       dispatch(generalActionCreator.setError(String(error)))
     } finally {
