@@ -5,6 +5,7 @@ export interface IUser {
   birthday?: string
   gender?: 'male' | 'female'
   email?: string
+  hasPassword: boolean
   isBlocked: boolean
   garage?: IUserCar[]
 }

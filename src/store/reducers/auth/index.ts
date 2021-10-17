@@ -1,4 +1,3 @@
-import { IUser } from '../../../types'
 import { IAuthState, TAuthAction, EAuthAction } from './types'
 
 const initialState: IAuthState = {

@@ -4,23 +4,25 @@ import React, {
   useState,
   // useState
 } from 'react'
+import moment from 'moment'
 // import { useDispatch } from 'react-redux'
 
 import { Row, Form, Input, Button, DatePicker, Radio, Space } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { EMode } from './types'
 
-// import { useTypedSelector } from '../../hooks/useTypedSelector'
+import { useTypedSelector } from '../../hooks/useTypedSelector'
 // import { authActionCreator } from '../../store/reducers/auth/action-creators'
 // import styles from './ProfilePage.module.scss'
 
 const ProfilePage: FC = () => {
   // const { isAuth } = useTypedSelector((state) => state.authReducer)
+  const { user } = useTypedSelector((state) => state.userReducer)
   // const dispatch = useDispatch()
   const [mode, setMode] = useState<EMode>(EMode.view)
   const profileForm = useRef(null)
 
-  const name = 'Vasya'
+  // const name = 'Vasya'
   // const name = undefined
 
   return (
@@ -30,7 +32,7 @@ const ProfilePage: FC = () => {
         <Form
           style={{ width: '600px' }}
           ref={profileForm}
-          name='auth'
+          name='profile'
           layout='vertical'
           onFinish={(e) => console.log('submit', e)}
         >
@@ -38,24 +40,29 @@ const ProfilePage: FC = () => {
             label='Имя'
             name='name'
             validateTrigger='onBlur'
-            rules={[{ len: 2, message: 'Длина должна быть не менее 2 символов' }]}
+            rules={[{ min: 2, message: 'Длина должна быть не менее 2 символов' }]}
           >
-            <Input placeholder='Введите имя' defaultValue={name} disabled={mode === EMode.view} />
+            <Input placeholder='Введите имя' defaultValue={user.name} disabled={mode === EMode.view} />
           </Form.Item>
 
           <Form.Item label='Дата рождения' name='birthday'>
-            <DatePicker placeholder='Выберите дату' disabled={mode === EMode.view} />
+            <DatePicker
+              placeholder='Выберите дату'
+              format='DD.MM.YYYY'
+              defaultValue={user.birthday ? moment(user.birthday, 'YYYY-MM-DD') : undefined}
+              disabled={mode === EMode.view}
+            />
           </Form.Item>
 
           <Form.Item label='Пол' name='gender'>
             <Radio.Group disabled={mode === EMode.view}>
-              <Radio.Button value='small'>Мужчина</Radio.Button>
-              <Radio.Button value='default'>Женщина</Radio.Button>
+              <Radio.Button value='male'>Мужчина</Radio.Button>
+              <Radio.Button value='female'>Женщина</Radio.Button>
             </Radio.Group>
           </Form.Item>
 
           <Form.Item name='email' label='Email' validateTrigger='onBlur' rules={[{ type: 'email' }]}>
-            <Input placeholder='Введите Email' disabled={mode === EMode.view} />
+            <Input placeholder='Введите Email' defaultValue={user.email} disabled={mode === EMode.view} />
           </Form.Item>
 
           <Form.List name='cars'>
@@ -119,6 +126,48 @@ const ProfilePage: FC = () => {
                 </Button>
               )}
             </Row>
+          </Form.Item>
+        </Form>
+      </Row>
+
+      <Row>Пароль</Row>
+      <Row justify={'center'}>
+        <Form
+          style={{ width: '600px' }}
+          ref={profileForm}
+          name='profile'
+          layout='vertical'
+          onFinish={(e) => console.log('submit', e)}
+        >
+          <Form.Item
+            label='Пароль'
+            name='password'
+            validateTrigger='onBlur'
+            rules={[{ min: 6, message: 'Длина должна быть не менее 6 символов' }]}
+          >
+            <Input.Password placeholder='Введите пароль' />
+          </Form.Item>
+          <Form.Item
+            label='Подтверждение пароля'
+            name='confirmPassword'
+            validateTrigger='onBlur'
+            rules={[
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve()
+                  }
+                  return Promise.reject(new Error('Пароли не совпадают'))
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder='Подтвердите пароль' />
+          </Form.Item>
+          <Form.Item>
+            <Button type='primary' htmlType='submit'>
+              {user.hasPassword ? 'Изменить пароль' : 'Сохранить пароль'}
+            </Button>
           </Form.Item>
         </Form>
       </Row>
