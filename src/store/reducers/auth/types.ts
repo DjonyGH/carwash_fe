@@ -21,6 +21,11 @@ export interface IAuthResponce {
   user: IUser
 }
 
+export interface IRefreshResponce {
+  user: IUser
+  accessToken: string
+}
+
 export interface IAuthBody {
   login: string
   password: string

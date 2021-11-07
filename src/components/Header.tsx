@@ -11,6 +11,7 @@ import { ERoutes } from '../router'
 
 const Header: FC = () => {
   const { isAuth } = useTypedSelector((state) => state.authReducer)
+  const { user } = useTypedSelector((state) => state.userReducer)
   const dispatch = useDispatch()
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
   const [currentPage, setCurrentPage] = useState<ERoutes>(ERoutes.HEAD)
@@ -33,6 +34,7 @@ const Header: FC = () => {
   return (
     <>
       <Row justify={'end'} align={'middle'} className='header'>
+        {isAuth && <div>{user.login}</div>}
         {checkPage(ERoutes.HEAD) && (
           <Button type='primary' onClick={() => changePage(ERoutes.HEAD)}>
             Главная
