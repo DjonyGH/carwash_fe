@@ -34,7 +34,7 @@ export const authActionCreator = {
     try {
       dispatch(generalActionCreator.setIsLoading(true))
       console.log('LOGOUT')
-      await http.post('/auth/logout')
+      await http.post('/auth/logout', { refreshToken: localStorage.getItem('refresh-token') })
 
       localStorage.removeItem('access-token')
       localStorage.removeItem('refresh-token')
