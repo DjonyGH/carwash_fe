@@ -3,7 +3,7 @@ export interface IUser {
   login: string
   name?: string
   birthday?: string
-  gender?: 'male' | 'female'
+  gender?: 'MALE' | 'FEMALE'
   email?: string
   hasPassword: boolean
   isBlocked: boolean

@@ -1,29 +1,24 @@
-import React, {
-  FC,
-  useRef,
-  useState,
-  // useState
-} from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import moment from 'moment'
-// import { useDispatch } from 'react-redux'
-
 import { Row, Form, Input, Button, DatePicker, Radio, Space } from 'antd'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { EMode } from './types'
-
 import { useTypedSelector } from '../../hooks/useTypedSelector'
-// import { authActionCreator } from '../../store/reducers/auth/action-creators'
-// import styles from './ProfilePage.module.scss'
 
 const ProfilePage: FC = () => {
-  // const { isAuth } = useTypedSelector((state) => state.authReducer)
   const { user } = useTypedSelector((state) => state.userReducer)
-  // const dispatch = useDispatch()
   const [mode, setMode] = useState<EMode>(EMode.view)
-  const profileForm = useRef(null)
 
-  // const name = 'Vasya'
-  // const name = undefined
+  const [form] = Form.useForm()
+
+  useEffect(() => {
+    form.setFieldsValue({ ...user, birthday: user.birthday ? moment(user.birthday, 'DD.MM.YYYY') : undefined })
+  }, [form, user])
+
+  const submitProfile = (e: any) => {
+    console.log('submit', e.birthday.format('DD.MM.YYYY'))
+    setMode(EMode.view)
+  }
 
   return (
     <>
@@ -31,10 +26,11 @@ const ProfilePage: FC = () => {
       <Row justify={'center'}>
         <Form
           style={{ width: '600px' }}
-          ref={profileForm}
+          form={form}
           name='profile'
           layout='vertical'
-          onFinish={(e) => console.log('submit', e)}
+          onFinish={submitProfile}
+          initialValues={{ ...user, birthday: user.birthday ? moment(user.birthday, 'DD.MM.YYYY') : undefined }}
         >
           <Form.Item
             label='Имя'
@@ -42,27 +38,27 @@ const ProfilePage: FC = () => {
             validateTrigger='onBlur'
             rules={[{ min: 2, message: 'Длина должна быть не менее 2 символов' }]}
           >
-            <Input placeholder='Введите имя' defaultValue={user.name} disabled={mode === EMode.view} />
+            <Input placeholder='Введите имя' disabled={mode === EMode.view} />
           </Form.Item>
 
           <Form.Item label='Дата рождения' name='birthday'>
             <DatePicker
               placeholder='Выберите дату'
               format='DD.MM.YYYY'
-              defaultValue={user.birthday ? moment(user.birthday, 'YYYY-MM-DD') : undefined}
+              allowClear={false}
               disabled={mode === EMode.view}
             />
           </Form.Item>
 
           <Form.Item label='Пол' name='gender'>
             <Radio.Group disabled={mode === EMode.view}>
-              <Radio.Button value='male'>Мужчина</Radio.Button>
-              <Radio.Button value='female'>Женщина</Radio.Button>
+              <Radio.Button value='MALE'>Мужчина</Radio.Button>
+              <Radio.Button value='FEMALE'>Женщина</Radio.Button>
             </Radio.Group>
           </Form.Item>
 
           <Form.Item name='email' label='Email' validateTrigger='onBlur' rules={[{ type: 'email' }]}>
-            <Input placeholder='Введите Email' defaultValue={user.email} disabled={mode === EMode.view} />
+            <Input placeholder='Введите Email' disabled={mode === EMode.view} />
           </Form.Item>
 
           <Form.List name='cars'>
@@ -132,13 +128,7 @@ const ProfilePage: FC = () => {
 
       <Row>Пароль</Row>
       <Row justify={'center'}>
-        <Form
-          style={{ width: '600px' }}
-          ref={profileForm}
-          name='profile'
-          layout='vertical'
-          onFinish={(e) => console.log('submit', e)}
-        >
+        <Form style={{ width: '600px' }} name='password' layout='vertical' onFinish={(e) => console.log('submit', e)}>
           <Form.Item
             label='Пароль'
             name='password'
