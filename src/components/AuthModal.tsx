@@ -1,4 +1,4 @@
-import React, { FC, useRef, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Button, Modal, Row, Form, Input } from 'antd'
@@ -7,6 +7,7 @@ import MaskedInput from 'antd-mask-input'
 import { authActionCreator } from '../store/reducers/auth/action-creators'
 import { IAuthBody } from '../store/reducers/auth/types'
 import { prepareLogin } from '../utils/prepareLogin'
+import { useTypedSelector } from '../hooks/useTypedSelector'
 
 interface IAuthModalProps {
   isModalVisible: boolean
@@ -14,13 +15,22 @@ interface IAuthModalProps {
 }
 
 const AuthModal: FC<IAuthModalProps> = ({ isModalVisible, setIsModalVisible }) => {
+  const { isAuth } = useTypedSelector((state) => state.authReducer)
   const dispatch = useDispatch()
   const [phone, setPhone] = useState<string>('')
 
   const authForm = useRef(null)
 
+  useEffect(() => {
+    isAuth && setIsModalVisible(false)
+  }, [isAuth]) //eslint-disable-line
+
   const handleValuesChange = (e: any) => {
     e.login && setPhone(prepareLogin(e.login))
+  }
+
+  const login = (e: IAuthBody) => {
+    dispatch(authActionCreator.login(prepareLogin(e.login), e.password))
   }
 
   const prefixSelector = <Form.Item noStyle>+7</Form.Item>
@@ -32,13 +42,7 @@ const AuthModal: FC<IAuthModalProps> = ({ isModalVisible, setIsModalVisible }) =
       closable={false}
       onCancel={() => setIsModalVisible(false)}
     >
-      <Form
-        ref={authForm}
-        name='auth'
-        layout='vertical'
-        onFinish={(e: IAuthBody) => dispatch(authActionCreator.login(prepareLogin(e.login), e.password))}
-        onValuesChange={handleValuesChange}
-      >
+      <Form ref={authForm} name='auth' layout='vertical' onFinish={login} onValuesChange={handleValuesChange}>
         <Form.Item
           label='Номер телефона'
           name='login'

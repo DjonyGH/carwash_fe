@@ -1,10 +1,10 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { IAuthResponce } from '../store/reducers/auth/types'
 
 export const BASE_URL = process.env.REACT_APP_BASE_URL
 
 const http = axios.create({
-  withCredentials: true,
+  // withCredentials: true,
   baseURL: BASE_URL,
 })
 
@@ -22,9 +22,11 @@ http.interceptors.response.use(
     if (error.responce.status === 401 && error.config && !error.config._isRetry) {
       originalRequest._isRetry = true
       try {
-        const responce = await axios.get<IAuthResponce>(`${BASE_URL}/refresh`, { withCredentials: true })
+        const responce = await axios.post<any, AxiosResponse<IAuthResponce>>(`${BASE_URL}/token/refresh`, {
+          refreshToken: localStorage.getItem('refresh-token'),
+        })
         localStorage.setItem('access-token', responce.data.accessToken)
-        // localStorage.setItem('refresh-token', responce.data.refreshToken)
+        localStorage.setItem('refresh-token', responce.data.refreshToken)
         http.request(originalRequest)
       } catch (error) {
         console.log('Не авторизован')

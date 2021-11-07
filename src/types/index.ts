@@ -3,9 +3,10 @@ export interface IUser {
   login: string
   name?: string
   birthday?: string
-  gender?: 'man' | 'wowan'
+  gender?: 'male' | 'female'
   email?: string
-  isBlocked?: string
+  hasPassword: boolean
+  isBlocked: boolean
   garage?: IUserCar[]
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import MainPage from '../pages/main/MainPage'
+import ProfilePage from '../pages/profile/ProfilePage'
 import NoFoundPage from '../pages/notFound/NotFoundPage'
 
 export interface IRoute {
@@ -19,6 +20,11 @@ export const publicRoutes: IRoute[] = [
   {
     path: ERoutes.HEAD,
     component: MainPage,
+    exact: true,
+  },
+  {
+    path: ERoutes.PROFILE,
+    component: ProfilePage,
     exact: true,
   },
   {
