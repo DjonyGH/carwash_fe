@@ -1,7 +1,7 @@
 import { TAppDispatch } from '../..'
-import { EUserAction, ISetUserAction } from './types'
+import { EUserAction, ISetUserAction, ISetUserCarsAction } from './types'
 import { generalActionCreator } from '../general/action-creators'
-import { IUser } from '../../../types'
+import { IUser, IUserCar } from '../../../types'
 import http from '../../../utils/http'
 
 export const userActionCreator = {
@@ -26,6 +26,22 @@ export const userActionCreator = {
       console.log('CHANGE USER iNFO', user)
       await http.put('/change-user-info', { user })
       dispatch(userActionCreator.setUser(user))
+    } catch (error) {
+      dispatch(generalActionCreator.setError(String(error)))
+    } finally {
+      dispatch(generalActionCreator.setIsLoading(false))
+    }
+  },
+  setUserCars: (userCars: IUserCar[]): ISetUserCarsAction => ({
+    type: EUserAction.SET_USER_CARS,
+    payload: userCars,
+  }),
+  fetchUserCars: () => async (dispatch: TAppDispatch) => {
+    try {
+      dispatch(generalActionCreator.setIsLoading(true))
+      console.log('FETSH USER CARS')
+      const { data } = await http.get('/user-car')
+      dispatch(userActionCreator.setUserCars(data))
     } catch (error) {
       dispatch(generalActionCreator.setError(String(error)))
     } finally {

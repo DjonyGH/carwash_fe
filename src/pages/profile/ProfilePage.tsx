@@ -1,19 +1,27 @@
 import React, { FC, useEffect, useState } from 'react'
 import moment from 'moment'
-import { Row, Form, Input, Button, DatePicker, Radio, Space } from 'antd'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { Row, Form, Input, Button, DatePicker, Radio } from 'antd'
 import { EMode } from './types'
 import { useTypedSelector } from '../../hooks/useTypedSelector'
+import { useDispatch } from 'react-redux'
+import { userActionCreator } from '../../store/reducers/user/action-creators'
+import UserCars from '../../components/UserCars'
 
 const ProfilePage: FC = () => {
   const { user } = useTypedSelector((state) => state.userReducer)
   const [mode, setMode] = useState<EMode>(EMode.view)
 
-  const [form] = Form.useForm()
+  const [userForm] = Form.useForm()
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    form.setFieldsValue({ ...user, birthday: user.birthday ? moment(user.birthday, 'DD.MM.YYYY') : undefined })
-  }, [form, user])
+    dispatch(userActionCreator.fetchUserCars())
+  }, []) //eslint-disable-line
+
+  useEffect(() => {
+    userForm.setFieldsValue({ ...user, birthday: user.birthday ? moment(user.birthday, 'DD.MM.YYYY') : undefined })
+  }, [userForm, user])
 
   const submitProfile = (e: any) => {
     console.log('submit', e.birthday.format('DD.MM.YYYY'))
@@ -26,7 +34,7 @@ const ProfilePage: FC = () => {
       <Row justify={'center'}>
         <Form
           style={{ width: '600px' }}
-          form={form}
+          form={userForm}
           name='profile'
           layout='vertical'
           onFinish={submitProfile}
@@ -61,49 +69,6 @@ const ProfilePage: FC = () => {
             <Input placeholder='Введите Email' disabled={mode === EMode.view} />
           </Form.Item>
 
-          <Form.List name='cars'>
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map(({ key, name, fieldKey, ...restField }) => (
-                  <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align='baseline'>
-                    <Form.Item
-                      {...restField}
-                      name='brand'
-                      fieldKey={[fieldKey, 'brand']}
-                      rules={[{ required: true, message: 'Выберите марку автомобиля' }]}
-                    >
-                      <Input placeholder='Марка' disabled={mode === EMode.view} />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name='model'
-                      fieldKey={[fieldKey, 'model']}
-                      rules={[{ required: true, message: 'Выберите молель автомобиля' }]}
-                    >
-                      <Input placeholder='Модель' disabled={mode === EMode.view} />
-                    </Form.Item>
-                    <Form.Item
-                      {...restField}
-                      name='carNumber'
-                      fieldKey={[fieldKey, 'carNumber']}
-                      rules={[{ required: true, message: 'Введите гос.номер автомобиля' }]}
-                    >
-                      <Input placeholder='Гос.номер' disabled={mode === EMode.view} />
-                    </Form.Item>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
-                  </Space>
-                ))}
-                {mode === EMode.edit && (
-                  <Form.Item>
-                    <Button type='dashed' onClick={() => add()} block icon={<PlusOutlined />}>
-                      Добавить автомобиль
-                    </Button>
-                  </Form.Item>
-                )}
-              </>
-            )}
-          </Form.List>
-
           <Form.Item>
             <Row justify={'space-between'}>
               {mode === EMode.edit && (
@@ -125,6 +90,8 @@ const ProfilePage: FC = () => {
           </Form.Item>
         </Form>
       </Row>
+
+      <UserCars />
 
       <Row>Пароль</Row>
       <Row justify={'center'}>

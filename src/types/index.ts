@@ -1,5 +1,5 @@
 export interface IUser {
-  id: number
+  id: string
   login: string
   name?: string
   birthday?: string
@@ -7,14 +7,13 @@ export interface IUser {
   email?: string
   hasPassword: boolean
   isBlocked: boolean
-  garage?: IUserCar[]
 }
 
 export interface IUserCar {
-  id: number
+  _id: string
   brand: string
   model: string
-  carTypeId: number
+  type: string
   carNumber: string
 }
 
@@ -26,7 +25,6 @@ export interface ICarBrand {
 export interface ICarModel {
   id: number
   name: string
-  carTypeId: number
 }
 
 export interface ICarType {
