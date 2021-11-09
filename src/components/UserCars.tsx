@@ -37,16 +37,15 @@ const UserCars: FC = () => {
   const deleteCar = (name: number, remove: (name: number) => void) => {
     setMode(EMode.view)
     setEditCarId(undefined)
-    remove(name)
-    //TODO: remove(name) заменить на метод удаления автомомбиля
+    dispatch(userActionCreator.deleteUserCar(userCars[name]._id))
   }
 
   const submitCars = (e: any) => {
     setMode(EMode.view)
     if (editCarId) {
-      //TODO: Добавить метод редактирования автомомбиля
+      dispatch(userActionCreator.updateUserCar(e.cars[0]))
     } else {
-      //TODO: Добавить метод добавления автомомбиля
+      dispatch(userActionCreator.createUserCar(e.cars[e.cars.length - 1]))
     }
   }
 
@@ -111,7 +110,7 @@ const UserCars: FC = () => {
                         disabled={mode === EMode.view || (userCars[fieldKey] && editCarId !== userCars[fieldKey]._id)}
                       />
                     </Form.Item>
-                    {mode === EMode.edit && (!userCars[fieldKey] || editCarId === userCars[fieldKey]._id) && (
+                    {mode === EMode.edit && userCars[fieldKey] && editCarId === userCars[fieldKey]._id && (
                       <MinusCircleOutlined onClick={() => deleteCar(name, remove)} />
                     )}
                     {mode === EMode.view && (
