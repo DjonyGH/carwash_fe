@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Row, Form, Input, Button, Space } from 'antd'
+import { Row, Form, Input, Button, Space, Select } from 'antd'
 import { MinusCircleOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
 import { EMode } from '../pages/profile/types'
 import { useTypedSelector } from '../hooks/useTypedSelector'
@@ -72,10 +72,15 @@ const UserCars: FC = () => {
                       fieldKey={[fieldKey, 'brand']}
                       rules={[{ required: true, message: 'Выберите марку' }]}
                     >
-                      <Input
+                      <Select
                         placeholder='Марка'
                         disabled={mode === EMode.view || (userCars[fieldKey] && editCarId !== userCars[fieldKey]._id)}
-                      />
+                        style={{ width: '130px' }}
+                      >
+                        <Select.Option value='BMW'>BMW</Select.Option>
+                        <Select.Option value='Lada'>Lada</Select.Option>
+                        <Select.Option value='Audi'>Audi</Select.Option>
+                      </Select>
                     </Form.Item>
                     <Form.Item
                       {...restField}
