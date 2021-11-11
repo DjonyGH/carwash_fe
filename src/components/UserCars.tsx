@@ -5,11 +5,16 @@ import { EMode } from '../pages/profile/types'
 import { useTypedSelector } from '../hooks/useTypedSelector'
 import { useDispatch } from 'react-redux'
 import { userActionCreator } from '../store/reducers/user/action-creators'
+import { carActionCreator } from '../store/reducers/car/action-creators'
+import { IUserCar } from '../types'
 
 const UserCars: FC = () => {
   const { userCars } = useTypedSelector((state) => state.userReducer)
+  const { brands, models, types } = useTypedSelector((state) => state.carReducer)
   const [mode, setMode] = useState<EMode>(EMode.view)
   const [editCarId, setEditCarId] = useState<string | undefined>(undefined)
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>(undefined)
+  const [sourceUserCars, setSourceUserCars] = useState<IUserCar[]>([])
 
   const [userCarsForm] = Form.useForm()
 
@@ -17,11 +22,13 @@ const UserCars: FC = () => {
 
   useEffect(() => {
     dispatch(userActionCreator.fetchUserCars())
+    dispatch(carActionCreator.fetchBrands())
   }, []) //eslint-disable-line
 
   useEffect(() => {
+    setSourceUserCars(JSON.parse(JSON.stringify(userCars)))
     userCarsForm.setFieldsValue({ cars: userCars })
-  }, [userCarsForm, userCars])
+  }, [userCarsForm, userCars.length]) //eslint-disable-line
 
   const addNewCar = (add: () => void) => {
     setMode(EMode.edit)
@@ -30,11 +37,14 @@ const UserCars: FC = () => {
   }
 
   const editCar = (row: number) => {
+    setSelectedBrand(userCars[row].brand)
+    dispatch(carActionCreator.fetchModels(userCars[row].brand))
+    dispatch(carActionCreator.fetchTypes(userCars[row].brand, userCars[row].model))
     setMode(EMode.edit)
     setEditCarId(userCars[row]._id)
   }
 
-  const deleteCar = (name: number, remove: (name: number) => void) => {
+  const deleteCar = (name: number) => {
     setMode(EMode.view)
     setEditCarId(undefined)
     dispatch(userActionCreator.deleteUserCar(userCars[name]._id))
@@ -47,7 +57,10 @@ const UserCars: FC = () => {
     } else {
       dispatch(userActionCreator.createUserCar(e.cars[e.cars.length - 1]))
     }
+    dispatch(carActionCreator.clearModelsAndTypes())
   }
+
+  console.log('sourceUserCars', sourceUserCars)
 
   return (
     <>
@@ -76,22 +89,53 @@ const UserCars: FC = () => {
                         placeholder='Марка'
                         disabled={mode === EMode.view || (userCars[fieldKey] && editCarId !== userCars[fieldKey]._id)}
                         style={{ width: '130px' }}
+                        onSelect={(e: string) => {
+                          setSelectedBrand(e)
+                          if (userCars[fieldKey]) {
+                            userCars[fieldKey].brand = e
+                            userCars[fieldKey].model = ''
+                            userCars[fieldKey].type = ''
+                            userCarsForm.setFieldsValue({ cars: userCars })
+                          }
+                          dispatch(carActionCreator.fetchModels(e))
+                        }}
                       >
-                        <Select.Option value='BMW'>BMW</Select.Option>
-                        <Select.Option value='Lada'>Lada</Select.Option>
-                        <Select.Option value='Audi'>Audi</Select.Option>
+                        {brands.map((brand) => (
+                          <Select.Option value={brand} key={brand}>
+                            {brand}
+                          </Select.Option>
+                        ))}
                       </Select>
                     </Form.Item>
                     <Form.Item
                       {...restField}
                       name={[name, 'model']}
                       fieldKey={[fieldKey, 'model']}
-                      rules={[{ required: true, message: 'Выберите молель' }]}
+                      rules={[{ required: true, message: 'Выберите модель' }]}
                     >
-                      <Input
+                      <Select
                         placeholder='Модель'
-                        disabled={mode === EMode.view || (userCars[fieldKey] && editCarId !== userCars[fieldKey]._id)}
-                      />
+                        disabled={
+                          mode === EMode.view ||
+                          (userCars[fieldKey] && editCarId !== userCars[fieldKey]._id) ||
+                          !models.length
+                        }
+                        style={{ width: '130px' }}
+                        onSelect={(e: string) => {
+                          if (userCars[fieldKey]) {
+                            userCars[fieldKey].model = e
+                            userCars[fieldKey].type = ''
+                            userCarsForm.setFieldsValue({ cars: userCars })
+                          }
+                          selectedBrand && dispatch(carActionCreator.fetchTypes(selectedBrand, e))
+                        }}
+                      >
+                        {models.map((model) => (
+                          <Select.Option value={model} key={model}>
+                            {model}
+                          </Select.Option>
+                        ))}
+                      </Select>
                     </Form.Item>
                     <Form.Item
                       {...restField}
@@ -99,10 +143,21 @@ const UserCars: FC = () => {
                       fieldKey={[fieldKey, 'type']}
                       rules={[{ required: true, message: 'Выберите тип' }]}
                     >
-                      <Input
+                      <Select
                         placeholder='Тип кузова'
-                        disabled={mode === EMode.view || (userCars[fieldKey] && editCarId !== userCars[fieldKey]._id)}
-                      />
+                        disabled={
+                          mode === EMode.view ||
+                          (userCars[fieldKey] && editCarId !== userCars[fieldKey]._id) ||
+                          !types.length
+                        }
+                        style={{ width: '130px' }}
+                      >
+                        {types.map((type) => (
+                          <Select.Option value={type} key={type}>
+                            {type}
+                          </Select.Option>
+                        ))}
+                      </Select>
                     </Form.Item>
                     <Form.Item
                       {...restField}
@@ -116,7 +171,7 @@ const UserCars: FC = () => {
                       />
                     </Form.Item>
                     {mode === EMode.edit && userCars[fieldKey] && editCarId === userCars[fieldKey]._id && (
-                      <MinusCircleOutlined onClick={() => deleteCar(name, remove)} />
+                      <MinusCircleOutlined onClick={() => deleteCar(name)} />
                     )}
                     {mode === EMode.view && (
                       <Button type='text' onClick={() => editCar(fieldKey)} block icon={<EditOutlined />} />
@@ -143,19 +198,15 @@ const UserCars: FC = () => {
                   </Button>
                   <Button
                     onClick={() => {
-                      dispatch(userActionCreator.setUserCars([...userCars]))
+                      dispatch(userActionCreator.setUserCars([...sourceUserCars]))
                       setMode(EMode.view)
+                      dispatch(carActionCreator.clearModelsAndTypes())
                     }}
                   >
                     Отмена
                   </Button>
                 </>
               )}
-              {/* {mode === EMode.view && (
-                <Button type='primary' htmlType='submit' onClick={() => setMode(EMode.edit)}>
-                  Редактировать
-                </Button>
-              )} */}
             </Row>
           </Form.Item>
         </Form>

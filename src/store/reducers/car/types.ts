@@ -1,9 +1,7 @@
-import { ICarBrand, ICarModel, ICarType } from '../../../types'
-
 export interface ICarState {
-  brands: ICarBrand[]
-  models: ICarModel[]
-  types: ICarType[]
+  brands: string[]
+  models: string[]
+  types: string[]
 }
 
 export enum ECarAction {
@@ -14,17 +12,17 @@ export enum ECarAction {
 
 export interface ISetBrandsAction {
   type: ECarAction.SET_BRANDS
-  payload: ICarBrand[]
+  payload: string[]
 }
 
 export interface ISetModelsAction {
   type: ECarAction.SET_MODELS
-  payload: ICarModel[]
+  payload: string[]
 }
 
 export interface ISetTypesAction {
   type: ECarAction.SET_TYPES
-  payload: ICarType[]
+  payload: string[]
 }
 
 export type TCarAction = ISetBrandsAction | ISetModelsAction | ISetTypesAction

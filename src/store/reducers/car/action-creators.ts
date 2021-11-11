@@ -1,20 +1,18 @@
-import { TAppDispatch, TRootState } from '../..'
+import { TAppDispatch } from '../..'
 import { ECarAction, ISetBrandsAction, ISetModelsAction, ISetTypesAction } from './types'
 import { generalActionCreator } from '../general/action-creators'
 import http from '../../../utils/http'
-import { AxiosResponse } from 'axios'
-import { ICarBrand, ICarModel, ICarType } from '../../../types'
 
 export const carActionCreator = {
-  setBrands: (brands: ICarBrand[]): ISetBrandsAction => ({
+  setBrands: (brands: string[]): ISetBrandsAction => ({
     type: ECarAction.SET_BRANDS,
     payload: brands,
   }),
-  setModels: (models: ICarModel[]): ISetModelsAction => ({
+  setModels: (models: string[]): ISetModelsAction => ({
     type: ECarAction.SET_MODELS,
     payload: models,
   }),
-  setTypes: (types: ICarType[]): ISetTypesAction => ({
+  setTypes: (types: string[]): ISetTypesAction => ({
     type: ECarAction.SET_TYPES,
     payload: types,
   }),
@@ -42,16 +40,22 @@ export const carActionCreator = {
       dispatch(generalActionCreator.setIsLoading(false))
     }
   },
-  fetchTypes: (model: string) => async (dispatch: TAppDispatch) => {
+  fetchTypes: (brand: string, model: string) => async (dispatch: TAppDispatch) => {
     try {
       dispatch(generalActionCreator.setIsLoading(true))
-      console.log('FETSH CAR TYPES')
-      const { data } = await http.get(`/car/types?model=${model}`)
+      console.log('FETSH CAR TYPES', brand, model)
+      const { data } = await http.get(`/car/types?brand=${brand}&model=${model}`)
+      console.log('types responce', data)
+
       dispatch(carActionCreator.setTypes(data))
     } catch (error) {
       dispatch(generalActionCreator.setError(String(error)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }
+  },
+  clearModelsAndTypes: () => (dispatch: TAppDispatch) => {
+    dispatch(carActionCreator.setModels([]))
+    dispatch(carActionCreator.setTypes([]))
   },
 }
