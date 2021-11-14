@@ -31,3 +31,8 @@ export interface ICarType {
   id: number
   name: string
 }
+
+export enum EMode {
+  view = 'view',
+  edit = 'edit',
+}

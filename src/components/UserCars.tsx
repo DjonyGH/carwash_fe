@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Row, Form, Input, Button, Space, Select } from 'antd'
 import { MinusCircleOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
-import { EMode } from '../pages/profile/types'
+import { EMode } from '../types'
 import { useTypedSelector } from '../hooks/useTypedSelector'
 import { useDispatch } from 'react-redux'
 import { userActionCreator } from '../store/reducers/user/action-creators'
@@ -59,8 +59,6 @@ const UserCars: FC = () => {
     }
     dispatch(carActionCreator.clearModelsAndTypes())
   }
-
-  console.log('sourceUserCars', sourceUserCars)
 
   return (
     <>

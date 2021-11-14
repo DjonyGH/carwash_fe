@@ -10,11 +10,12 @@ export const userActionCreator = {
     type: EUserAction.SET_USER,
     payload: user,
   }),
-  createPassword: (pass: string) => async (dispatch: TAppDispatch) => {
+  createPassword: (password: string) => async (dispatch: TAppDispatch) => {
     try {
       dispatch(generalActionCreator.setIsLoading(true))
-      console.log('CREATE PASSWORD', pass)
-      await http.post('/create-password', { pass })
+      console.log('CREATE PASSWORD')
+      await http.post('/users/set-password', { password })
+      return true
     } catch (error) {
       dispatch(generalActionCreator.setError(String(error)))
     } finally {
