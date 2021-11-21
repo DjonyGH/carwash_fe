@@ -2,7 +2,8 @@ import React, { FC, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router'
 
-import { Button, Row } from 'antd'
+import { Button, Row, Tooltip } from 'antd'
+import { UserOutlined } from '@ant-design/icons'
 
 import AuthModal from './AuthModal'
 import { useTypedSelector } from '../hooks/useTypedSelector'
@@ -28,43 +29,72 @@ const Header: FC = () => {
   }
 
   const checkPage = (page: ERoutes) => {
-    return currentPage !== page
+    return currentPage === page
   }
 
   return (
     <>
-      <Row justify={'end'} align={'middle'} className='header'>
-        {isAuth && <div>{user.login}</div>}
-        {checkPage(ERoutes.HEAD) && (
-          <Button type='primary' onClick={() => changePage(ERoutes.HEAD)}>
-            Главная
-          </Button>
-        )}
-        {checkPage(ERoutes.ORDER) && (
-          <Button type='primary' className='ml_10' onClick={() => changePage(ERoutes.ORDER)}>
+      <Row justify={'space-between'} align={'middle'} className='header'>
+        <Button type='primary' onClick={() => changePage(ERoutes.HEAD)}>
+          LOGO
+        </Button>
+        <div>
+          <Button
+            type='primary'
+            disabled={checkPage(ERoutes.ORDER)}
+            className='ml_10'
+            onClick={() => changePage(ERoutes.ORDER)}
+          >
             Записаться
           </Button>
-        )}
-        {checkPage(ERoutes.PROFILE) && (
-          <Button type='primary' className='ml_10' onClick={() => changePage(ERoutes.PROFILE)}>
-            Личный кабинет
-          </Button>
-        )}
-        {checkPage(ERoutes.ABOUT_US) && (
-          <Button type='primary' className='ml_10' onClick={() => changePage(ERoutes.ABOUT_US)}>
+
+          {isAuth && (
+            <Button
+              type='primary'
+              disabled={checkPage(ERoutes.PROFILE)}
+              className='ml_10'
+              onClick={() => changePage(ERoutes.PROFILE)}
+            >
+              Личный кабинет
+            </Button>
+          )}
+          {isAuth && (
+            <Button
+              type='primary'
+              disabled={checkPage(ERoutes.GARAGE)}
+              className='ml_10'
+              onClick={() => changePage(ERoutes.GARAGE)}
+            >
+              Гараж
+            </Button>
+          )}
+
+          <Button
+            type='primary'
+            disabled={checkPage(ERoutes.ABOUT_US)}
+            className='ml_10'
+            onClick={() => changePage(ERoutes.ABOUT_US)}
+          >
             О нас
           </Button>
-        )}
-        {!isAuth && (
-          <Button type='primary' className='ml_10' onClick={() => setIsModalVisible(true)}>
-            Войти
-          </Button>
-        )}
-        {isAuth && (
-          <Button type='primary' className='ml_10' onClick={() => dispatch(authActionCreator.logout())}>
-            Выйти
-          </Button>
-        )}
+
+          {!isAuth && (
+            <Button type='primary' className='ml_10' onClick={() => setIsModalVisible(true)}>
+              Войти
+            </Button>
+          )}
+          {isAuth && (
+            <Tooltip title={user.name || user.login}>
+              <Button
+                type='primary'
+                shape='circle'
+                icon={<UserOutlined />}
+                className='ml_10'
+                onClick={() => dispatch(authActionCreator.logout())}
+              />
+            </Tooltip>
+          )}
+        </div>
       </Row>
       <AuthModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} />
     </>

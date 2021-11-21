@@ -5,6 +5,7 @@ import { ERoutes, publicRoutes } from './router'
 import { authActionCreator } from './store/reducers/auth/action-creators'
 import './App.scss'
 import Header from './components/Header'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 function App() {
   const dispatch = useDispatch()
@@ -17,12 +18,14 @@ function App() {
     <div className='App'>
       <Header />
       <div className='content'>
-        <Switch>
-          {publicRoutes.map((route) => (
-            <Route path={route.path} component={route.component} exact={route.exact} key={route.path} />
-          ))}
-          <Redirect to={ERoutes.NOT_FOUND} />
-        </Switch>
+        <PerfectScrollbar>
+          <Switch>
+            {publicRoutes.map((route) => (
+              <Route path={route.path} component={route.component} exact={route.exact} key={route.path} />
+            ))}
+            <Redirect to={ERoutes.NOT_FOUND} />
+          </Switch>
+        </PerfectScrollbar>
       </div>
     </div>
   )
