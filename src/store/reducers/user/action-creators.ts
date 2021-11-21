@@ -47,8 +47,8 @@ export const userActionCreator = {
       console.log('FETSH USER CARS')
       const { data } = await http.get('/user-car')
       dispatch(userActionCreator.setUserCars(data))
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }
@@ -65,8 +65,8 @@ export const userActionCreator = {
 
       dispatch(userActionCreator.setUserCars(userCars))
       openNotification(ENotificationType.success, 'Автомобиль успешно добалвен')
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }
@@ -78,8 +78,8 @@ export const userActionCreator = {
       const { data } = await http.put<IUserCar, AxiosResponse<IUserCar[]>>('/user-car', newUserCar)
       dispatch(userActionCreator.setUserCars(data))
       openNotification(ENotificationType.success, 'Данные автомобиля успешно изменены')
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }
@@ -96,8 +96,8 @@ export const userActionCreator = {
 
       dispatch(userActionCreator.setUserCars(newUserCars))
       openNotification(ENotificationType.success, 'Автомобиль успешно удален')
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }

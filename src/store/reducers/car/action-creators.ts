@@ -22,8 +22,8 @@ export const carActionCreator = {
       console.log('FETSH CAR BRANDS')
       const { data } = await http.get('/car/brands')
       dispatch(carActionCreator.setBrands(data))
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }
@@ -34,8 +34,8 @@ export const carActionCreator = {
       console.log('FETSH CAR MODELS')
       const { data } = await http.get(`/car/models?brand=${brand}`)
       dispatch(carActionCreator.setModels(data))
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }
@@ -48,8 +48,8 @@ export const carActionCreator = {
       console.log('types responce', data)
 
       dispatch(carActionCreator.setTypes(data))
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }

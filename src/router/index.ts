@@ -32,16 +32,6 @@ export const publicRoutes: IRoute[] = [
     exact: true,
   },
   {
-    path: ERoutes.PROFILE,
-    component: ProfilePage,
-    exact: true,
-  },
-  {
-    path: ERoutes.GARAGE,
-    component: GaragePage,
-    exact: true,
-  },
-  {
     path: ERoutes.ABOUT_US,
     component: AboutUsPage,
     exact: true,
@@ -52,4 +42,15 @@ export const publicRoutes: IRoute[] = [
   },
 ]
 
-export const privatRoutes: IRoute[] = []
+export const privatRoutes: IRoute[] = [
+  {
+    path: ERoutes.PROFILE,
+    component: ProfilePage,
+    exact: true,
+  },
+  {
+    path: ERoutes.GARAGE,
+    component: GaragePage,
+    exact: true,
+  },
+]

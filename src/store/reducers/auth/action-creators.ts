@@ -24,8 +24,8 @@ export const authActionCreator = {
       localStorage.setItem('refresh-token', refreshToken)
       dispatch(authActionCreator.setIsAuth(true))
       dispatch(userActionCreator.setUser(user))
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }
@@ -40,8 +40,8 @@ export const authActionCreator = {
       localStorage.removeItem('refresh-token')
       dispatch(authActionCreator.setIsAuth(false))
       dispatch(userActionCreator.setUser({} as IUser))
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }
@@ -58,8 +58,8 @@ export const authActionCreator = {
       localStorage.setItem('access-token', accessToken)
       dispatch(authActionCreator.setIsAuth(true))
       dispatch(userActionCreator.setUser(user))
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+    } catch (error: any) {
+      // dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }

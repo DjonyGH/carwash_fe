@@ -5,7 +5,7 @@ import { Row } from 'antd'
 const AboutUsPage: FC = () => {
   return (
     <>
-      <Row>Запись</Row>
+      <Row>О нас</Row>
     </>
   )
 }
