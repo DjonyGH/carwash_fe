@@ -5,8 +5,8 @@ export interface IUser {
   birthday?: string
   gender?: 'MALE' | 'FEMALE'
   email?: string
-  hasPassword: boolean
-  isBlocked: boolean
+  hasPassword?: boolean
+  isBlocked?: boolean
 }
 
 export interface IUserCar {

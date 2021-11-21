@@ -1,7 +1,7 @@
 import { IAuthState, TAuthAction, EAuthAction } from './types'
 
 const initialState: IAuthState = {
-  isAuth: false,
+  isAuth: undefined,
 }
 
 export default function authReducer(state = initialState, action: TAuthAction): IAuthState {

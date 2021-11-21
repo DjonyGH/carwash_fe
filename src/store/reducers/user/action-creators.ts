@@ -28,11 +28,12 @@ export const userActionCreator = {
     try {
       dispatch(generalActionCreator.setIsLoading(true))
       console.log('CHANGE USER iNFO', user)
-      await http.put('/change-user-info', { user })
+      await http.put('/users', user)
       dispatch(userActionCreator.setUser(user))
       openNotification(ENotificationType.success, 'Данные пользователя успешно изменены')
-    } catch (error) {
-      dispatch(generalActionCreator.setError(String(error)))
+      return true
+    } catch (error: any) {
+      dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
     }

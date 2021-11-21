@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import moment from 'moment'
 import { Row, Form, Input, Button, DatePicker, Radio } from 'antd'
-import { EMode } from '../types'
+import { EMode, IUser } from '../types'
 import { useTypedSelector } from '../hooks/useTypedSelector'
 import { useDispatch } from 'react-redux'
 import { userActionCreator } from '../store/reducers/user/action-creators'
@@ -15,16 +15,19 @@ const UserCommon: FC = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(userActionCreator.fetchUserCars())
-  }, []) //eslint-disable-line
-
-  useEffect(() => {
     userForm.setFieldsValue({ ...user, birthday: user.birthday ? moment(user.birthday, 'DD.MM.YYYY') : undefined })
   }, [userForm, user])
 
   const submitProfile = (e: any) => {
-    console.log('submit', e.birthday.format('DD.MM.YYYY'))
-    setMode(EMode.view)
+    // console.log('submit e', e)
+    // console.log('submit', e.birthday.format('DD.MM.YYYY'))
+    const updatedUser: IUser = {
+      ...e,
+      birthday: e.birthday.format('DD.MM.YYYY'),
+    }
+    console.log('updatedUser', updatedUser)
+    const response = dispatch(userActionCreator.changeUserInfo(updatedUser))
+    !!response && setMode(EMode.view)
   }
 
   return (

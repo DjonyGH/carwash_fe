@@ -25,6 +25,7 @@ export const authActionCreator = {
       dispatch(authActionCreator.setIsAuth(true))
       dispatch(userActionCreator.setUser(user))
     } catch (error: any) {
+      dispatch(authActionCreator.setIsAuth(false))
       dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))
@@ -59,6 +60,7 @@ export const authActionCreator = {
       dispatch(authActionCreator.setIsAuth(true))
       dispatch(userActionCreator.setUser(user))
     } catch (error: any) {
+      dispatch(authActionCreator.setIsAuth(false))
       // dispatch(generalActionCreator.setError(String(error.response.data.message)))
     } finally {
       dispatch(generalActionCreator.setIsLoading(false))

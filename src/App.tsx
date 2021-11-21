@@ -10,32 +10,37 @@ import { useTypedSelector } from './hooks/useTypedSelector'
 
 function App() {
   const { isAuth } = useTypedSelector((state) => state.authReducer)
+
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(authActionCreator.checkAuth())
   }, []) //eslint-disable-line
 
+  console.log('isAuth', isAuth)
+
   return (
     <div className='App'>
       <Header />
       <div className='content'>
         <PerfectScrollbar>
-          <Switch>
-            {publicRoutes.map((route) => (
-              <Route path={route.path} component={route.component} exact={route.exact} key={route.path} />
-            ))}
-            {isAuth &&
-              privatRoutes.map((route) => (
+          {isAuth !== undefined && (
+            <Switch>
+              {publicRoutes.map((route) => (
                 <Route path={route.path} component={route.component} exact={route.exact} key={route.path} />
               ))}
-            {privatRoutes.map((route) => (
-              <Route path={route.path} component={route.component} exact={route.exact} key={route.path}>
-                <Redirect to={ERoutes.NOT_FOUND} />
-              </Route>
-            ))}
-            <Redirect to={ERoutes.NOT_FOUND} />
-          </Switch>
+              {isAuth &&
+                privatRoutes.map((route) => (
+                  <Route path={route.path} component={route.component} exact={route.exact} key={route.path} />
+                ))}
+              {privatRoutes.map((route) => (
+                <Route path={route.path} component={route.component} exact={route.exact} key={route.path}>
+                  <Redirect to={ERoutes.NOT_FOUND} />
+                </Route>
+              ))}
+              <Redirect to={ERoutes.NOT_FOUND} />
+            </Switch>
+          )}
         </PerfectScrollbar>
       </div>
     </div>
