@@ -3,6 +3,8 @@ import MainPage from '../pages/main/MainPage'
 import ProfilePage from '../pages/profile/ProfilePage'
 import NoFoundPage from '../pages/notFound/NotFoundPage'
 import GaragePage from '../pages/garage/GaragePage'
+import OrderPage from '../pages/order/OrderPage'
+import AboutUsPage from '../pages/aboutUs/AboutUsPage'
 
 export interface IRoute {
   path: string
@@ -25,6 +27,11 @@ export const publicRoutes: IRoute[] = [
     exact: true,
   },
   {
+    path: ERoutes.ORDER,
+    component: OrderPage,
+    exact: true,
+  },
+  {
     path: ERoutes.PROFILE,
     component: ProfilePage,
     exact: true,
@@ -32,6 +39,11 @@ export const publicRoutes: IRoute[] = [
   {
     path: ERoutes.GARAGE,
     component: GaragePage,
+    exact: true,
+  },
+  {
+    path: ERoutes.ABOUT_US,
+    component: AboutUsPage,
     exact: true,
   },
   {
