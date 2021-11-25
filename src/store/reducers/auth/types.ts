@@ -1,7 +1,7 @@
 import { IUser } from '../../../types'
 
 export interface IAuthState {
-  isAuth: boolean
+  isAuth: boolean | undefined
 }
 
 export enum EAuthAction {

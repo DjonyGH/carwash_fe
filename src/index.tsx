@@ -6,6 +6,7 @@ import { store } from './store'
 import App from './App'
 import './index.scss'
 import 'antd/dist/antd.css'
+import 'react-perfect-scrollbar/dist/css/styles.css'
 
 ReactDOM.render(
   <Provider store={store}>

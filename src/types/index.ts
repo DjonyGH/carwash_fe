@@ -1,20 +1,19 @@
 export interface IUser {
-  id: number
+  id: string
   login: string
   name?: string
   birthday?: string
-  gender?: 'male' | 'female'
+  gender?: 'MALE' | 'FEMALE'
   email?: string
-  hasPassword: boolean
-  isBlocked: boolean
-  garage?: IUserCar[]
+  hasPassword?: boolean
+  isBlocked?: boolean
 }
 
 export interface IUserCar {
-  id: number
+  _id: string
   brand: string
   model: string
-  carTypeId: number
+  type: string
   carNumber: string
 }
 
@@ -26,10 +25,14 @@ export interface ICarBrand {
 export interface ICarModel {
   id: number
   name: string
-  carTypeId: number
 }
 
 export interface ICarType {
   id: number
   name: string
+}
+
+export enum EMode {
+  view = 'view',
+  edit = 'edit',
 }

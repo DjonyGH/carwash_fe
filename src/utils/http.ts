@@ -26,7 +26,7 @@ http.interceptors.response.use(
           refreshToken: localStorage.getItem('refresh-token'),
         })
         localStorage.setItem('access-token', responce.data.accessToken)
-        localStorage.setItem('refresh-token', responce.data.refreshToken)
+        // localStorage.setItem('refresh-token', responce.data.refreshToken)
         http.request(originalRequest)
       } catch (error) {
         console.log('Не авторизован')
